@@ -144,6 +144,11 @@ app.get("/contact/edit/:nama", (req, res) => {
   });
 });
 
+// proses ubah data
+app.post('/contact/update', (req, res) => {
+  res.send(req.body);
+});
+
 
 
 
