@@ -134,6 +134,18 @@ app.get('/contact/delete/:nama', (req, res) => {
   }
 });
 
+// form ubah data contact
+app.get("/contact/edit/:nama", (req, res) => {
+  const contact = findContact(req.params.nama);
+  res.render("edit-contact", {
+    tittle: "Form Ubah Data Contact",
+    layout: 'layouts/main-layout',
+    contact,
+  });
+});
+
+
+
 
 // halaman detail contact
 app.get("/contact/:nama", (req, res) => {
