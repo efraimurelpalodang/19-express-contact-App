@@ -1,0 +1,15 @@
+<h1>Web Server nodeJs</h1>
+<h2>Hallo, <%= nama %></h2>
+
+<h4>Daftar Mahasiswa</h4>
+<!--! control flow dalam ejs namanya -->
+<!--* Jika data mahasiswa masih kosong -->
+<% if (mahasiswa.length < 1) { %>
+  <p>Data Mahasiswa Masih Kosong</p>
+<% } else { %> <% mahasiswa.forEach(mhs => { %>
+  <ul>
+    <li>Nama : <%= mhs.nama %></li>
+    <li>Email : <%= mhs.email %></li>
+  </ul>
+  <% }) %>
+<% } %>
