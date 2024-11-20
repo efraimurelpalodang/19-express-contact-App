@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 3000;
-const { loadContact, findContact, addContact, cekDuplikat, deleteContact } = require('./utils/contacts.js');
+const { loadContact, findContact, addContact, cekDuplikat, deleteContact, updateContacts } = require('./utils/contacts.js');
 const { body, validationResult, check } = require('express-validator');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -115,7 +115,7 @@ app.post('/contact', [ body('nama').custom((value) => {
     res.redirect('/contact');
   }
 
-})
+});
 
 // proses delete contact
 app.get('/contact/delete/:nama', (req, res) => {
@@ -145,10 +145,34 @@ app.get("/contact/edit/:nama", (req, res) => {
 });
 
 // proses ubah data
-app.post('/contact/update', (req, res) => {
-  res.send(req.body);
-});
+app.post('/contact/update', [ 
+  body('nama').custom((value, {req}) => {
+  const duplikat = cekDuplikat(value);
+  if(value !== req.body.oldNama && duplikat) {
+    throw new Error('Nama Yang Anda Masukkan Sudah Terdaftar!!');
+  }
+  return true;
+}),
+  emailVal(), 
+  noVal()
+], (req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()) {
+    res.render("edit-contact", {
+      tittle: "Form Ubah Data Contact",
+      layout: 'layouts/main-layout',
+      errors: errors.array(),
+      contact: req.body,
+    });
+  } else {
+    updateContacts(req.body);
+    // kirimkan flash message
+    req.flash('msg', 'Data Kontak Berhasil Diubah!!');
 
+    res.redirect('/contact');
+  }
+
+})
 
 
 
